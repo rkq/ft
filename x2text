@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+name=$(basename $0)
+dir=$(dirname $(pwd)/${name})
+java -jar ${dir}/lib/tika-app-1.9.jar -t $@

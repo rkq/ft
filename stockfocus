@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import requests
+import sys
+import time
+
+def main():
+    urlFormat = 'http://focus.stock.hexun.com/service/stock_sort_xml.jsp?date=%s&type=1&start=0&count=4000'
+    dateFormat = '%Y-%m-%d_%H:%M:00'
+    # Data is generated in each 15 minites
+    dataInterval = 15 * 60
+    # If returned data size is less than 100K, we assume data has not been generated
+    minSize = 100 * 1024
+    now = time.time()
+    now = now - now % dataInterval
+    while True:
+        url = urlFormat % (time.strftime(dateFormat, time.localtime(now)))
+        resp = requests.get(url)
+        if len(resp.text) < minSize:
+            now = now - dataInterval
+        else:
+            break
+    print(resp.text.encode(resp.encoding))
+
+if __name__ == "__main__":
+    main()

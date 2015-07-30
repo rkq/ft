@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+name=$(basename $0)
+dir=$(dirname $(pwd)/${name})
+export PATH=${dir}:${PATH}
+urlformat='http://data.10jqka.com.cn/financial/ggjy/op/code/code/%s/ajax/1/'
+while read line; do
+    code=$(echo "${line}" | awk '{print $1;}')
+    url=$(printf "${urlformat}" "${code}")
+    x2text "${url}" | awk -v line="${line}" 'BEGIN{sum=0; "date -d $(date -d \"-6 month\" +%Y-%m-%d) +%s" | getline last} $1~/^[0-9]+$/ {"date -d "$5 " +%s" | getline now; if(now >= last){sum+=$6;}}END{printf("%s\t%d\n", line, sum);}'
+done
