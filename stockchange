@@ -4,7 +4,7 @@ dir=$(dirname $(pwd)/${name})
 export PATH=${dir}:${PATH}
 urlformat='http://data.10jqka.com.cn/financial/ggjy/op/code/code/%s/ajax/1/'
 while read line; do
-    code=$(echo "${line}" | awk '{print $1;}')
+    code=$(echo "${line}" | awk '{print $2;}')
     url=$(printf "${urlformat}" "${code}")
-    x2text "${url}" | awk -v line="${line}" 'BEGIN{sum=0; "date -d $(date -d \"-6 month\" +%Y-%m-%d) +%s" | getline last} $1~/^[0-9]+$/ {"date -d "$5 " +%s" | getline now; if(now >= last){sum+=$6;}}END{printf("%s%s%d\n", line, FS, sum);}'
+    x2text "${url}" | awk -v line="${line}" 'BEGIN{has=0;sum=0; "date -d $(date -d \"-6 month\" +%Y-%m-%d) +%s" | getline last} $1~/^[0-9]+$/ {has=1; "date -d "$5 " +%s" | getline now; if(now >= last){sum+=$6;}}END{if(has==0){printf("%s\t-\n", line);}else{printf("%s\t%d\n", line, sum);}}'
 done
