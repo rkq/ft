@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 name=$(basename $0)
 dir=$(dirname $(pwd)/${name})
-java -jar ${dir}/support/tika-app-1.9.jar -t $@
+export PATH=${dir}:${PATH}
+stockfocusxml | stockfocusxml2text
